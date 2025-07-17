@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './App.css';
-import Header from './components/Header.js';
+import Header from './components/Header/Header.js';
 import Home from './pages/Home.js';
 import LoginPage from './pages/LoginPage.js';
 import RegistrationPage from './pages/RegistrationPage.js';
