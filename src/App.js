@@ -5,7 +5,7 @@ import Header from './components/Header/Header.js';
 import Home from './pages/Home.js';
 import LoginPage from './pages/LoginPage.js';
 import RegistrationPage from './pages/RegistrationPage.js';
-import Footer from './components/Footer.js';
+import Footer from './components/Footer/Footer.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {

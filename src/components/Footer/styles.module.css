@@ -1,0 +1,16 @@
+.footer {
+  background-color: var(--primary-color);
+  color: var(--secondary-text-color);
+  padding: 1rem;
+  text-align: center;
+}
+
+.footer h3 {
+  font-size: 1 rem;
+  font-weight: 300;
+}
+
+.footer p {
+  font-size: 0.8 rem;
+  font-weight: 300;
+}
