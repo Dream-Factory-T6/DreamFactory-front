@@ -1,0 +1,206 @@
+.homeContainer {
+  display: flex;
+  min-height: calc(100vh - 120px);
+  background-color: var(--background-color);
+  padding: 20px 0;
+  gap: 0;
+}
+
+.searchSidebar {
+  width: 350px;
+  background-color: var(--background-color);
+  padding: 30px 20px;
+  margin: 0;
+  min-height: calc(100vh - 120px);
+  align-self: flex-start;
+}
+
+.verticalDivider {
+  width: 2px;
+  background-color: var(--border-color);
+  margin: 20px 0;
+  align-self: stretch;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.searchSection {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 20px;
+}
+
+.searchSection label {
+  display: block;
+  font-weight: bold;
+  color: var(--primary-text-color);
+  margin-bottom: 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.searchInput {
+  width: 250px;
+  padding: 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+  transition: border-color 0.3s ease;
+  text-align: left;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 5px rgba(167, 137, 88, 0.3);
+}
+
+.searchInput::placeholder {
+  color: #999;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 50px;
+  background-color: var(--background-color);
+  margin: 0;
+}
+
+.destinations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 70px;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.destinationCard {
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  overflow: hidden;
+  width: 500px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.destinationCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.cardImage {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.cardImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.destinationCard:hover .cardImage img {
+  transform: scale(1.05);
+}
+
+.cardContent {
+  padding: 20px;
+  background-color: var(--primary-color);
+}
+
+.destinationName {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--secondary-text-color);
+  margin: 0 0 8px 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.destinationDescription {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--secondary-text-color);
+}
+
+.destinationLocation {
+  font-size: 16px;
+  margin: 0 0 15px 0;
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.ratingValue {
+  font-size: 18px;
+}
+
+.stars {
+  font-size: 20px;
+  color: #ffd700;
+  letter-spacing: 2px;
+}
+
+@media (max-width: 768px) {
+  .homeContainer {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .searchSidebar {
+    width: calc(100% - 40px);
+    margin: 10px 20px;
+    position: static;
+  }
+
+  .destinations {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .destinationCard {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .mainContent {
+    margin: 0 20px 20px 20px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchSidebar {
+    padding: 20px 15px;
+  }
+
+  .mainContent {
+    padding: 15px;
+  }
+
+  .destinationName {
+    font-size: 20px;
+  }
+
+  .destinationLocation {
+    font-size: 14px;
+  }
+}
