@@ -159,6 +159,29 @@
   letter-spacing: 2px;
 }
 
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.paginationButton {
+  margin: 0 5px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--primary-color);
+  background: #fff;
+  cursor: pointer;
+  font-weight: normal;
+  transition: border 0.2s, background 0.2s;
+}
+
+.paginationButtonActive {
+  border: 1px solid #333;
+  background: #e0e0e0;
+  font-weight: bold;
+}
+
 @media (max-width: 768px) {
   .homeContainer {
     flex-direction: column;
