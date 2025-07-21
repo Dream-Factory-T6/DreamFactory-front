@@ -93,7 +93,7 @@
 
 .stars {
   font-size: 28px;
-  color: #ffd700;
+  color: #ffbd59;
   letter-spacing: 3px;
 }
 
@@ -120,6 +120,14 @@
   flex-direction: column;
 }
 
+.review {
+  border-radius: 5px;
+  padding: 5px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
+}
+
 .reviewsTitle {
   font-size: 24px;
   font-weight: bold;
@@ -143,7 +151,7 @@
 
 .reviewStars {
   font-size: 18px;
-  color: #ffd700;
+  color: #ffbd59;
   letter-spacing: 2px;
 }
 

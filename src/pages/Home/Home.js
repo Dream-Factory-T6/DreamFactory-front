@@ -1,58 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './styles.module.css';
+import { fetchDestinations } from '../../api';
 
-
-const tajMahal = 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop';
-const paradiseBeach = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop';
-const santorini = 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&h=300&fit=crop';
-const newYork = 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&h=300&fit=crop';
 
 function Home() {
   const [locationSearch, setLocationSearch] = useState('');
   const [nameSearch, setNameSearch] = useState('');
+  const [destinations, setDestinations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
 
-  const destinations = [
-    {
-      id: 1,
-      name: 'Taj Mahal',
-      location: 'Agra, India',
-      rating: 5.0,
-      image: tajMahal,
-      description: 'Iconic white marble mausoleum'
-    },
-    {
-      id: 2,
-      name: 'Paradise Beach',
-      location: 'Bali, Indonesia',
-      rating: 5.0,
-      image: paradiseBeach,
-      description: 'Tropical paradise with crystal clear waters'
-    },
-    {
-      id: 3,
-      name: 'Santorini Sunset',
-      location: 'Santorini, Greece',
-      rating: 5.0,
-      image: santorini,
-      description: 'Breathtaking sunset views over white buildings'
-    },
-    {
-      id: 4,
-      name: 'New York City',
-      location: 'New York, USA',
-      rating: 5.0,
-      image: newYork,
-      description: 'The city that never sleeps'
-    }
-  ];
+  useEffect(() => {
+    setLoading(true);
+    setError(null); 
+    const size = 1000; 
+    fetchDestinations(1, size)
+      .then(data => {
+        setDestinations(data.content || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message || 'Failed to load destinations');
+        setLoading(false);
+      });
+  }, [locationSearch, nameSearch]);
 
   const filteredDestinations = destinations.filter(destination => {
-    const matchesLocation = destination.location.toLowerCase().includes(locationSearch.toLowerCase());
-    const matchesName = destination.name.toLowerCase().includes(nameSearch.toLowerCase());
+    const matchesLocation = locationSearch
+      ? destination.location?.toLowerCase().includes(locationSearch.toLowerCase())
+      : true;
+    const nameField = destination.title || destination.name || '';
+    const matchesName = nameSearch
+      ? nameField.toLowerCase().includes(nameSearch.toLowerCase())
+      : true;
     return matchesLocation && matchesName;
   });
+
+  const pageCount = Math.ceil(filteredDestinations.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedDestinations = filteredDestinations.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    if (currentPage > pageCount) {
+      setCurrentPage(1);
+    }
+  }, [filteredDestinations, pageCount, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [locationSearch, nameSearch]);
 
   const renderStars = (rating) => {
     return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
@@ -93,29 +94,59 @@ function Home() {
       <div className={styles.verticalDivider}></div>
 
       <main className={styles.mainContent}>
+        {loading && <div>Loading destinations...</div>}
+        {error && <div style={{ color: 'red' }}>{error}</div>}
         <div className={styles.destinations}>
-          {filteredDestinations.map(destination => (
+          {!loading && !error && filteredDestinations.length === 0 && (
+            <div style={{ textAlign: 'center', color: '#888', fontSize: '1.2em', margin: '40px 0' }}>
+              No destinations found matching your search.
+            </div>
+          )}
+          {!loading && !error && paginatedDestinations.map(destination => (
             <div 
               key={destination.id} 
               className={styles.destinationCard}
               onClick={() => handleCardClick(destination.id)}
             >
               <div className={styles.cardImage}>
-                <img src={destination.image} alt={destination.name} />
+                {destination.imageUrl && typeof destination.imageUrl === 'string' && destination.imageUrl.startsWith('http') && (
+                  <img src={destination.imageUrl} alt={destination.title || destination.name} />
+                )}
+                <div>
+                  <small>{destination.imageUrl}</small>
+                </div>
               </div>
               <div className={styles.cardContent}>
-                <h3 className={styles.destinationName}>{destination.name}</h3>
+                <h3 className={styles.destinationName}>{destination.title || destination.name}</h3>
                 <div className={styles.destinationDescription}>
-                <p className={styles.destinationLocation}>{destination.location}</p>
-                <div className={styles.rating}>
-                  <span className={styles.ratingValue}>{destination.rating.toFixed(1)}</span>
-                    <span className={styles.stars}>{renderStars(destination.rating)}</span>
-                    </div>
+                  <p className={styles.destinationLocation}>{destination.location}</p>
+                  <div className={styles.rating}>
+                    <span className={styles.ratingValue}>{typeof destination.rating === 'number' ? destination.rating.toFixed(1) : 'N/A'}</span>
+                    <span className={styles.stars}>{renderStars(destination.rating || 0)}</span>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
+        {/* Pagination controls */}
+        {!loading && !error && pageCount > 1 && (
+          <div className={styles.paginationContainer}>
+            {Array.from({ length: pageCount }, (_, idx) => (
+              <button
+                key={idx + 1}
+                onClick={() => setCurrentPage(idx + 1)}
+                className={
+                  currentPage === idx + 1
+                    ? `${styles.paginationButton} ${styles.paginationButtonActive}`
+                    : styles.paginationButton
+                }
+              >
+                {idx + 1}
+              </button>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
