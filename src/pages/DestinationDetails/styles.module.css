@@ -93,7 +93,7 @@
 
 .stars {
   font-size: 28px;
-  color: #ffbd59;
+  color: var(--star-gold-alt);
   letter-spacing: 3px;
 }
 
@@ -155,6 +155,13 @@
   letter-spacing: 2px;
 }
 
+.reviewFormBody {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 10px;
+}
+
 .reviewText {
   color: var(--primary-text-color);
   line-height: 1.5;
@@ -182,6 +189,82 @@
 .registerLink:hover {
   color: var(--secondary-color);
   text-decoration: underline;
+}
+
+.reviewForm {
+  margin-top: 30px;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stars {
+  font-size: 22px;
+  color: var(--star-gold);
+  letter-spacing: 2px;
+  margin-left: 8px;
+}
+
+.submitButton {
+  background: var(--success-color);
+  color: white;
+  border: none;
+  width: 200px;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: background 0.2s;
+}
+.submitButton:disabled {
+  background: #b2d6cd;
+  cursor: not-allowed;
+}
+
+.reviewError {
+  color: var(--error-color);
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.reviewSuccess {
+  color: #7bb3a6;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.reviewFormBodyTextarea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reviewTextarea {
+  width: 70%;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  padding: 8px;
+  font-size: 15px;
+  resize: vertical;
+}
+
+.reviewFormTitle {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.noReviews {
+  color: var(--neutral-color);
+  margin-bottom: 10px;
+  text-align: left;
 }
 
 @media (max-width: 768px) {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
+import { useNavigate } from 'react-router-dom';
 
 function RegistrationPage() {
   const [formData, setFormData] = useState({
@@ -7,6 +8,8 @@ function RegistrationPage() {
     email: '',
     password: ''
   });
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,9 +19,35 @@ function RegistrationPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Registration attempt:', formData);
+    setError(null);
+    try {
+      const response = await fetch('http://localhost:8080/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Registration failed.');
+      }
+      const loginResponse = await fetch('http://localhost:8080/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: formData.username, password: formData.password }),
+        credentials: 'include',
+      });
+      if (!loginResponse.ok) {
+        throw new Error('Registration succeeded, but login failed.');
+      }
+      const loginData = await loginResponse.json();
+      localStorage.setItem('token', loginData.token);
+      window.dispatchEvent(new Event('focus'));
+      navigate('/user-account');
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -68,6 +97,7 @@ function RegistrationPage() {
             />
           </div>
 
+          {error && <div style={{ color: 'red', textAlign: 'center' }}>{error}</div>}
           <button type="submit" className={styles.registerButton}>
             REGISTER
           </button>

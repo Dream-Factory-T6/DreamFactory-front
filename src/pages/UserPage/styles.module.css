@@ -1,0 +1,252 @@
+.userPageContainer {
+  display: flex;
+  min-height: calc(100vh - 120px);
+  background: var(--background-color);
+  position: relative;
+}
+
+.welcome {
+  position: absolute;
+  top: 30px;
+  right: 60px;
+  font-size: 22px;
+  color: var(--success-color);
+  font-weight: 500;
+  z-index: 2;
+}
+
+.sidebar {
+  width: 350px;
+  background: var(--background-color);
+  padding: 30px 20px;
+  min-height: calc(100vh - 120px);
+}
+
+.sidebarInner {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 20px;
+}
+
+.sidebarLabel {
+  font-weight: bold;
+  color: var(--info-color);
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sidebarSelect {
+  width: 250px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 14px;
+  background: white;
+  color: var(--primary-color);
+}
+
+.divider {
+  width: 1px;
+  background: var(--border-color);
+  margin: 20px 0;
+  align-self: stretch;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.main {
+  flex: 1;
+  padding: 50px;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  width: 320px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  color: var(--secondary-text-color);
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.cardImage {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.cardImage:hover {
+  transform: scale(1.05);
+}
+
+.cardContent {
+  padding: 1rem 0 0 1rem;
+  flex: 1;
+  background-color: var(--primary-color);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.cardDetails {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cardLocation {
+  margin: 0.5rem 0 0 0;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 0.5rem 1rem 1rem 1rem;
+}
+
+.actionIcon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.actionIcon:hover {
+  transform: scale(1.1);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent {
+  background: #f5ede4;
+  border-radius: 12px;
+  padding: 40px;
+  min-width: 400px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  position: relative;
+}
+
+.modalClose {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.modalTitle {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.modalQuestion {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.modalButton {
+  background: #7bb3a6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.modalButtonCancel {
+  background: #ccc;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--neutral-color);
+  font-size: 1.2rem;
+}
+
+.error {
+  color: var(--error-color);
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1.1rem;
+}
+
+.empty {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--neutral-color);
+  font-size: 1.2rem;
+}
+
+.addButton {
+  display: inline-block;
+  background: #7bb3a6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 32px;
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.addButton:hover {
+  background: #2996ff;
+}

@@ -6,6 +6,15 @@
   --secondary-text-color: #ffffff;
   --border-color: #563c1a;
   --card-background: #e8f4f8;
+  --success-color: #7bb3a6;
+  --error-color: #e53935;
+  --neutral-color: #888;
+  --info-color: #333;
+  --star-gold: #ffd700;
+  --star-gold-alt: #ffbd59;
+  --input-bg: #f8f9fa;
+  --input-placeholder: #999;
+  --card-text: #222;
 }
 
 body {

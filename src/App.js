@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage/LoginPage.js';
 import RegistrationPage from './pages/RegistrationPage/RegistrationPage.js';
 import DestinationDetails from './pages/DestinationDetails/DestinationDetails.js';
 import Footer from './components/Footer/Footer.js';
+import UserPage from './pages/UserPage/UserPage.js';
+import AddDestination from './pages/AddDestination/AddDestination.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/destination/:id" element={<DestinationDetails />} />
+            <Route path="/user-account" element={<UserPage />} />
+            <Route path="/add" element={<AddDestination />} />
           </Routes>
         </main>
         <Footer />

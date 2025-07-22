@@ -95,10 +95,10 @@ function Home() {
 
       <main className={styles.mainContent}>
         {loading && <div>Loading destinations...</div>}
-        {error && <div style={{ color: 'red' }}>{error}</div>}
+        {error && <div className={styles.error}>{error}</div>}
         <div className={styles.destinations}>
           {!loading && !error && filteredDestinations.length === 0 && (
-            <div style={{ textAlign: 'center', color: '#888', fontSize: '1.2em', margin: '40px 0' }}>
+            <div className={styles.empty}>
               No destinations found matching your search.
             </div>
           )}
