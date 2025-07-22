@@ -1,15 +1,61 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchDestinationById } from '../../api';
 import styles from './styles.module.css';
+
+function parseJwt(token) {
+  if (!token) return null;
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch {
+    return null;
+  }
+}
+
+function isTokenExpired(token) {
+  const payload = parseJwt(token);
+  if (!payload || !payload.exp) return true;
+  return Date.now() >= payload.exp * 1000;
+}
 
 function DestinationDetails() {
   const { id } = useParams();
   const [destination, setDestination] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [review, setReview] = useState({ rating: 0, body: '' });
+  const [reviewError, setReviewError] = useState(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewSuccess, setReviewSuccess] = useState(false);
+  const [isAuth, setIsAuth] = useState(() => {
+    const token = localStorage.getItem('token');
+    return Boolean(token && !isTokenExpired(token));
+  });
 
   useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('token');
+      setIsAuth(Boolean(token && !isTokenExpired(token)));
+    };
+    window.addEventListener('focus', checkAuth);
+    checkAuth();
+    return () => window.removeEventListener('focus', checkAuth);
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token && isTokenExpired(token)) {
+      localStorage.removeItem('token');
+      setIsAuth(false);
+    }
+  }, []);
+
+  const fetchDetails = useCallback(() => {
     setLoading(true);
     setError(null);
     fetchDestinationById(id)
@@ -23,8 +69,71 @@ function DestinationDetails() {
       });
   }, [id]);
 
-  const renderStars = (rating) => {
-    return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+  useEffect(() => {
+    fetchDetails();
+  }, [id, fetchDetails]);
+
+  const renderStars = (rating, onClick) => {
+    return (
+      <span>
+        {[1,2,3,4,5].map(star => (
+          <span
+            key={star}
+            style={{ color: star <= rating ? '#FFD700' : '#ccc', fontSize: 22, cursor: onClick ? 'pointer' : 'default' }}
+            onClick={onClick ? () => onClick(star) : undefined}
+            data-testid={`star-${star}`}
+          >★</span>
+        ))}
+      </span>
+    );
+  };
+
+  const handleReviewChange = (e) => {
+    const { name, value } = e.target;
+    setReview(r => ({ ...r, [name]: value }));
+  };
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    setReviewError(null);
+    setReviewSuccess(false);
+    if (!review.rating || review.rating < 0 || review.rating > 5) {
+      setReviewError('Rating is required (0-5)');
+      return;
+    }
+    if (!review.body || review.body.trim().length === 0) {
+      setReviewError('Comment is required');
+      return;
+    }
+    if (review.body.length > 300) {
+      setReviewError('Comment must be at most 300 characters');
+      return;
+    }
+    setReviewLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          rating: Number(review.rating),
+          body: review.body,
+          destinationId: Number(id),
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to submit review');
+      setReview({ rating: 0, body: '' });
+      setReviewSuccess(true);
+      fetchDetails();
+      setTimeout(() => setReviewSuccess(false), 2000);
+    } catch (err) {
+      setReviewError(err.message);
+    } finally {
+      setReviewLoading(false);
+    }
   };
 
   if (loading) {
@@ -79,12 +188,38 @@ function DestinationDetails() {
               </div>
             ))
           ) : (
-            <div style={{ color: '#888', marginBottom: '10px' }}>No reviews yet.</div>
+            <div className={styles.noReviews}>No reviews yet.</div>
           )}
-          <p className={styles.loginPrompt}>
-            <Link to="/login" className={styles.loginLink}>Login</Link> or{' '}
-            <Link to="/register" className={styles.registerLink}>Register</Link> to write a review.
-          </p>
+          {isAuth ? (
+            <form className={styles.reviewForm} onSubmit={handleReviewSubmit}>
+              <div className={styles.reviewFormTitle}>Write a review:</div>
+              <div className={styles.reviewFormBody}>
+                <span>Rating:</span> {renderStars(review.rating, (star) => setReview(r => ({ ...r, rating: star })))}
+              <div className={styles.reviewFormBodyTextarea}>
+                <label htmlFor="review-body">Comment:</label>
+                <textarea
+                  id="review-body"
+                  name="body"
+                  value={review.body}
+                  onChange={handleReviewChange}
+                  maxLength={300}
+                  rows={3}
+                  className={styles.reviewTextarea}
+                />
+                </div>
+                </div>
+              {reviewError && <div className={styles.reviewError}>{reviewError}</div>}
+              {reviewSuccess && <div className={styles.reviewSuccess}>Review submitted successfully!</div>}
+              <button type="submit" className={styles.submitButton} disabled={reviewLoading}>
+                SUBMIT REVIEW
+              </button>
+            </form>
+          ) : (
+            <p className={styles.loginPrompt}>
+              <Link to="/login" className={styles.loginLink}>Login</Link> or{' '}
+              <Link to="/register" className={styles.registerLink}>Register</Link> to write a review.
+            </p>
+          )}
         </div>
       </div>
     </div>

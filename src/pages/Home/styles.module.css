@@ -16,7 +16,7 @@
 }
 
 .verticalDivider {
-  width: 2px;
+  width: 1px;
   background-color: var(--border-color);
   margin: 20px 0;
   align-self: stretch;
@@ -45,11 +45,11 @@
 .searchInput {
   width: 250px;
   padding: 12px;
-  border: 2px solid var(--border-color);
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   font-size: 14px;
   background-color: white;
-  color: #333;
+  color: var(--info-color);
   transition: border-color 0.3s ease;
   text-align: left;
 }
@@ -61,7 +61,7 @@
 }
 
 .searchInput::placeholder {
-  color: #999;
+  color: var(--input-placeholder);
 }
 
 .mainContent {
@@ -155,8 +155,29 @@
 
 .stars {
   font-size: 20px;
-  color: #ffd700;
+  color: var(--star-gold);
   letter-spacing: 2px;
+}
+
+.error {
+  color: var(--error-color);
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.empty {
+  text-align: center;
+  color: var(--neutral-color);
+  font-size: 1.2em;
+  margin: 40px 0;
+}
+
+.sectionTitle {
+  font-weight: bold;
+  font-size: 1.3em;
+  margin-bottom: 18px;
+  text-align: left;
 }
 
 .paginationContainer {

@@ -1,0 +1,107 @@
+main {
+  background-color: var(--background-color);
+}
+
+.container {
+  width: 80%;
+  margin: 40px auto;
+  background: none;
+  padding: 30px 0 0 0;
+  background-color: var(--background-color);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.form {
+  border: 3px solid var(--border-color);
+  border-radius: 14px;
+  padding: 32px 24px 24px 24px;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.formGroup {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.label {
+  flex: 0 0 160px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.input,
+.textarea,
+.inputFile {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border-color);
+  font-size: 1rem;
+  background: #f8f9fa;
+  color: var(--card-text);
+  margin-left: 12px;
+}
+
+.textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.inputFile {
+  padding: 6px 12px;
+}
+
+.submitButton {
+  background: #7bb3a6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 0;
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: background 0.2s;
+  width: 200px;
+}
+.submitButton:disabled {
+  background: #b2d6cd;
+  cursor: not-allowed;
+}
+
+.success {
+  color: var(--success-color);
+  margin-top: 32px;
+  font-size: 1.2rem;
+  text-align: left;
+}
+
+.error {
+  color: var(--error-color);
+  margin-top: 32px;
+  font-size: 1.1rem;
+  text-align: left;
+}
+
+.previewImage {
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  display: block;
+  margin: 0 auto;
+}
