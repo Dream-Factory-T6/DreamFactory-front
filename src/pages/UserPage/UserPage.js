@@ -4,6 +4,7 @@ import deleteIcon from '../../assets/images/destinations/delete-icon.png';
 import UpdateDestinationForm from '../../forms/UpdateDestinationForm/UpdateDestinationForm';
 import DeleteDestinationModal from '../../forms/DeleteDestinationModal/DeleteDestinationModal';
 import styles from './styles.module.css';
+import { fetchWithAuth } from '../../api';
 
 function parseJwt(token) {
   if (!token) return null;
@@ -38,9 +39,7 @@ function UserPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`/api/destinations/my-destinations?sort=${sort}`, {
-        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
-      });
+      const response = await fetchWithAuth(`/api/destinations/my-destinations?sort=${sort}`);
       if (!response.ok) {
         throw new Error('Failed to fetch your destinations');
       }
@@ -51,7 +50,7 @@ function UserPage() {
     } finally {
       setLoading(false);
     }
-  }, [sort, token]);
+  }, [sort]);
 
   useEffect(() => {
     fetchMyDestinations();
@@ -62,9 +61,8 @@ function UserPage() {
     setDeleteLoading(true);
     setDeleteError(null);
     try {
-      const response = await fetch(`/api/destinations/${deleteModal.id}`, {
+      const response = await fetchWithAuth(`/api/destinations/${deleteModal.id}`, {
         method: 'DELETE',
-        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
       });
       if (!response.ok) throw new Error('Failed to delete destination');
       setDeleteSuccess(true);

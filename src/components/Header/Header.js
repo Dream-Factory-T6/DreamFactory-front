@@ -6,6 +6,7 @@ import homeIcon from '../../assets/images/header/homepage-logo.png';
 import loginIcon from '../../assets/images/header/login-logo.png';
 import registerIcon from '../../assets/images/header/registration-logo.png';
 import myAccountIcon from '../../assets/images/header/myaccount-logo.png';
+import adminIcon from '../../assets/images/header/admin-logo.png';
 import addIcon from '../../assets/images/header/add-logo.png';
 import logoutIcon from '../../assets/images/header/logout-logo.png';
 import LogoutConfirmationModal from '../../forms/LogoutConfirmationModal';
@@ -17,11 +18,13 @@ function Header() {
     const token = localStorage.getItem('token');
     return Boolean(token && !isTokenExpired(token));
   });
+  const [role, setRole] = useState(() => localStorage.getItem('role') || 'user');
 
   useEffect(() => {
     const checkAuth = () => {
       const token = localStorage.getItem('token');
       setIsLoggedIn(Boolean(token && !isTokenExpired(token)));
+      setRole(localStorage.getItem('role') || 'user');
     };
     window.addEventListener('focus', checkAuth);
     checkAuth();
@@ -37,6 +40,8 @@ function Header() {
 
   const handleLogoutConfirm = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('role');
     setShowLogoutModal(false);
     setIsLoggedIn(false);
     navigate('/');
@@ -71,20 +76,31 @@ function Header() {
           </Link>
           {isLoggedIn ? (
             <>
-              <Link 
-                to="/user-account" 
-                className={`${styles.navLink} ${isActive('/user-account') ? styles.active : ''}`}
-              >
-                <img src={myAccountIcon} alt="My Account" />
-              </Link>
-              <Link 
-                to="/add" 
-                className={styles.navLink}
-              >
-                <img src={addIcon} alt="Add" />
-              </Link>
-              <Link 
-                to="/logout" 
+              {role === 'admin' ? (
+                <Link
+                  to="/admin-dashboard"
+                  className={`${styles.navLink} ${isActive('/admin-dashboard') ? styles.active : ''}`}
+                >
+                  <img src={adminIcon} alt="Admin" />
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/user-account"
+                    className={`${styles.navLink} ${isActive('/user-account') ? styles.active : ''}`}
+                  >
+                    <img src={myAccountIcon} alt="My Account" />
+                  </Link>
+                  <Link
+                    to="/add"
+                    className={styles.navLink}
+                  >
+                    <img src={addIcon} alt="Add" />
+                  </Link>
+                </>
+              )}
+              <Link
+                to="/logout"
                 className={styles.navLink}
                 onClick={handleLogoutClick}
               >

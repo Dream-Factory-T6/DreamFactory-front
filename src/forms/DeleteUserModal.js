@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './styles.module.css';
+import styles from './DeleteDestinationModal/styles.module.css';
 
 function DeleteUserModal({ user, loading, error, success, onConfirm, onCancel }) {
   return (

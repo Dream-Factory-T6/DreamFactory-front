@@ -1,0 +1,159 @@
+.adminContainer {
+  min-height: 100vh;
+  background: var(--background-color);
+}
+
+.headerBar {
+  background: #222;
+  color: var(--secondary-text-color);
+  padding: 8px 24px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.innerContainer {
+  max-width: 1100px;
+  margin: 24px auto;
+  background: var(--background-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding-bottom: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px 0 32px;
+  background: var(--background-color);
+}
+
+.logoSection {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.title {
+  font-size: 2rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.nav {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  transition: box-shadow 0.2s;
+}
+
+.navLink img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.navLink.active img {
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.main {
+  padding: 32px 32px 0 32px;
+}
+
+.usersTitle {
+  font-size: 2rem;
+  color: var(--primary-text-color);
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.addUserButton {
+  background: var(--primary-color);
+  color: var(--secondary-text-color);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 28px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 18px;
+  cursor: pointer;
+  width: 200px;
+  align-self: center;
+  transition: background 0.2s;
+}
+.addUserButton:hover {
+  background: var(--secondary-color);
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  padding: 18px;
+}
+
+.usersTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.1rem;
+}
+
+.usersTable th,
+.usersTable td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.usersTable th {
+  color: var(--primary-color);
+  font-weight: 600;
+  background: var(--background-color);
+}
+
+.usersTable td {
+  color: var(--primary-text-color);
+}
+
+.actionIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.actionIcon:last-child {
+  margin-right: 0;
+}
+.actionIcon:hover {
+  transform: scale(1.12);
+}
+
+.footer {
+  text-align: center;
+  color: var(--neutral-color);
+  font-size: 1rem;
+  margin-top: 32px;
+  padding-bottom: 12px;
+}

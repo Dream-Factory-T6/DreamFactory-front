@@ -10,6 +10,7 @@ import Footer from './components/Footer/Footer.js';
 import UserPage from './pages/UserPage/UserPage.js';
 import AddDestination from './pages/AddDestination/AddDestination.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/destination/:id" element={<DestinationDetails />} />
             <Route path="/user-account" element={<UserPage />} />
             <Route path="/add" element={<AddDestination />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
           </Routes>
         </main>
         <Footer />
