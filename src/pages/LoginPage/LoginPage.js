@@ -33,8 +33,67 @@ function LoginPage() {
       }
       const data = await response.json();
       localStorage.setItem('token', data.token);
+      if (data.refreshToken) {
+        localStorage.setItem('refreshToken', data.refreshToken);
+      } else {
+      }
+
+      let role = 'user';
+      let authoritiesRaw = data.authorities;
+      let authorities = [];
+
+      if (authoritiesRaw) {
+        try {
+          if (typeof authoritiesRaw === 'string') {
+            authorities = JSON.parse(authoritiesRaw);
+          } else if (Array.isArray(authoritiesRaw)) {
+            authorities = authoritiesRaw;
+          }
+          if (Array.isArray(authorities) && authorities.some(a => a.authority === 'ROLE_ADMIN')) {
+            role = 'admin';
+          }
+        } catch (e) {
+        }
+      }
+
+      try {
+        const token = data.token;
+        const payload = JSON.parse(atob(token.split('.')[1]));
+
+
+        let foundAdmin = false;
+        if (payload && payload.authorities) {
+          let authoritiesArr = [];
+          if (typeof payload.authorities === 'string') {
+            try {
+              authoritiesArr = JSON.parse(payload.authorities);
+            } catch (e) {
+              authoritiesArr = [];
+            }
+          } else if (Array.isArray(payload.authorities)) {
+            authoritiesArr = payload.authorities;
+          }
+          if (authoritiesArr.some(a => a.authority === 'ROLE_ADMIN')) {
+            foundAdmin = true;
+          }
+        }
+        if (
+          foundAdmin ||
+          (payload && payload.role && (payload.role === 'ADMIN' || payload.role === 'ROLE_ADMIN')) ||
+          (payload && payload.roles && Array.isArray(payload.roles) && payload.roles.some(r => r === 'ADMIN' || r === 'ROLE_ADMIN'))
+        ) {
+          role = 'admin';
+        }
+      } catch (err) {
+      }
+
+      localStorage.setItem('role', role);
       window.dispatchEvent(new Event('focus'));
-      navigate('/user-account');
+      if (role === 'admin') {
+        navigate('/admin-dashboard');
+      } else {
+        navigate('/user-account');
+      }
     } catch (err) {
       setError(err.message);
     }

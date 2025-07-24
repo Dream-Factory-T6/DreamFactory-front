@@ -21,3 +21,45 @@ export async function fetchDestinationById(id) {
     throw error;
   }
 }
+
+export async function fetchWithAuth(url, options = {}) {
+  let token = localStorage.getItem('token');
+  let refreshToken = localStorage.getItem('refreshToken');
+  
+  const baseUrl = 'http://localhost:8080';
+  const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
+  
+  let response = await fetch(fullUrl, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
+
+  if (response.status === 401 && refreshToken) {
+    const refreshResp = await fetch(`${baseUrl}/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    });
+    if (refreshResp.ok) {
+      const { accessToken } = await refreshResp.json();
+      localStorage.setItem('token', accessToken);
+      response = await fetch(fullUrl, {
+        ...options,
+        headers: {
+          ...(options.headers || {}),
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+    } else {
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('role');
+      window.location.href = '/login';
+      return;
+    }
+  }
+  return response;
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './styles.module.css';
+import { fetchWithAuth } from '../../api';
 
 function AddDestination() {
   const [form, setForm] = useState({
@@ -33,15 +34,13 @@ function AddDestination() {
     setSubmitting(true);
     setError(null);
     try {
-      const token = localStorage.getItem('token');
       const formData = new FormData();
       formData.append('title', form.title);
       formData.append('location', form.location);
       formData.append('description', form.description);
       if (form.image) formData.append('image', form.image);
-      const response = await fetch('/api/destinations', {
+      const response = await fetchWithAuth('/api/destinations', {
         method: 'POST',
-        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
         body: formData,
       });
       if (!response.ok) throw new Error('Failed to add destination');

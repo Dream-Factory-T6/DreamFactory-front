@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { fetchDestinationById } from '../../api';
+import { fetchDestinationById, fetchWithAuth } from '../../api';
 import styles from './styles.module.css';
 
 function parseJwt(token) {
@@ -111,12 +111,10 @@ function DestinationDetails() {
     }
     setReviewLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('/api/reviews', {
+      const response = await fetchWithAuth('/api/reviews', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
           rating: Number(review.rating),

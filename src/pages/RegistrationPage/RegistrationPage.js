@@ -43,6 +43,10 @@ function RegistrationPage() {
       }
       const loginData = await loginResponse.json();
       localStorage.setItem('token', loginData.token);
+      // Сохраняем refresh token если он есть в ответе
+      if (loginData.refreshToken) {
+        localStorage.setItem('refreshToken', loginData.refreshToken);
+      }
       window.dispatchEvent(new Event('focus'));
       navigate('/user-account');
     } catch (err) {

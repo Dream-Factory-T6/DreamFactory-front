@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
+import { fetchWithAuth } from '../../api';
 
 function UpdateDestinationForm({ destination, onClose, onSuccess }) {
   const [form, setForm] = useState({
@@ -25,15 +26,13 @@ function UpdateDestinationForm({ destination, onClose, onSuccess }) {
     setSubmitting(true);
     setError(null);
     try {
-      const token = localStorage.getItem('token');
       const formData = new FormData();
       formData.append('title', form.title);
       formData.append('location', form.location);
       formData.append('description', form.description);
       if (form.image) formData.append('image', form.image);
-      const response = await fetch(`/api/destinations/${destination.id}`, {
+      const response = await fetchWithAuth(`/api/destinations/${destination.id}`, {
         method: 'PUT',
-        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
         body: formData,
       });
       if (!response.ok) throw new Error('Failed to update destination');
