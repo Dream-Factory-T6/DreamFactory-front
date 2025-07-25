@@ -5,6 +5,7 @@ import UpdateDestinationForm from '../../forms/UpdateDestinationForm/UpdateDesti
 import DeleteDestinationModal from '../../forms/DeleteDestinationModal/DeleteDestinationModal';
 import styles from './styles.module.css';
 import { fetchWithAuth } from '../../api';
+import { useNavigate } from 'react-router-dom';
 
 function parseJwt(token) {
   if (!token) return null;
@@ -34,6 +35,7 @@ function UserPage() {
   const token = localStorage.getItem('token');
   const user = parseJwt(token);
   const username = user?.username || user?.sub || 'User';
+  const navigate = useNavigate();
 
   const fetchMyDestinations = useCallback(async () => {
     try {
@@ -111,17 +113,22 @@ function UserPage() {
         )}
         <div className={styles.cards}>
           {destinations.map(dest => (
-            <div key={dest.id} className={styles.card}>
+            <div
+              key={dest.id}
+              className={styles.card}
+              onClick={() => navigate(`/destination/${dest.id}`)}
+              style={{ cursor: 'pointer' }}
+            >
               {dest.imageUrl && <img src={dest.imageUrl} alt={dest.name} className={styles.cardImage} />}
               <div className={styles.cardContent}>
                 <h3 className={styles.cardTitle}>{dest.title}</h3>
                 <div className={styles.cardDetails}>
                   <p className={styles.cardLocation}>{dest.location}</p>
-                                <div className={styles.cardActions}>
-                <img src={updateIcon} alt="Update" className={styles.actionIcon} onClick={() => setUpdateModal(dest)} />
-                <img src={deleteIcon} alt="Delete" className={styles.actionIcon} onClick={() => setDeleteModal(dest)} />
+                  <div className={styles.cardActions} onClick={e => e.stopPropagation()}>
+                    <img src={updateIcon} alt="Update" className={styles.actionIcon} onClick={() => setUpdateModal(dest)} />
+                    <img src={deleteIcon} alt="Delete" className={styles.actionIcon} onClick={() => setDeleteModal(dest)} />
+                  </div>
                 </div>
-              </div>
               </div>
             </div>
           ))}

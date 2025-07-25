@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchDestinationById, fetchWithAuth } from '../../api';
 import styles from './styles.module.css';
+import { FaHeart } from 'react-icons/fa';
+import LikeLoginModal from '../../forms/LikeLoginModal/LikeLoginModal';
 
 function parseJwt(token) {
   if (!token) return null;
@@ -36,6 +38,10 @@ function DestinationDetails() {
     const token = localStorage.getItem('token');
     return Boolean(token && !isTokenExpired(token));
   });
+  const [likeInfo, setLikeInfo] = useState({ liked: false, likeCount: 0 });
+  const [likeLoading, setLikeLoading] = useState(false);
+  const [showLikeLoginModal, setShowLikeLoginModal] = useState(false);
+
 
   useEffect(() => {
     const checkAuth = () => {
@@ -72,6 +78,37 @@ function DestinationDetails() {
   useEffect(() => {
     fetchDetails();
   }, [id, fetchDetails]);
+
+  useEffect(() => {
+    async function fetchLikes() {
+      try {
+        const response = await fetchWithAuth(`/api/destinations/${id}/likes`);
+        if (response.ok) {
+          const data = await response.json();
+          setLikeInfo({ liked: data.liked, likeCount: data.likeCount });
+        }
+      } catch {}
+    }
+    fetchLikes();
+  }, [id]);
+
+  const handleLikeToggle = async () => {
+    if (!isAuth) {
+      setShowLikeLoginModal(true);
+      return;
+    }
+    if (likeLoading) return;
+    setLikeLoading(true);
+    try {
+      const response = await fetchWithAuth(`/api/destinations/${id}/likes/toggle`, { method: 'POST' });
+      if (response.ok) {
+        const data = await response.json();
+        setLikeInfo({ liked: data.liked, likeCount: data.likeCount });
+      }
+    } finally {
+      setLikeLoading(false);
+    }
+  };
 
   const renderStars = (rating, onClick) => {
     return (
@@ -163,14 +200,31 @@ function DestinationDetails() {
           <div className={styles.cardContent}>
             <div className={styles.destinationNameContainer}>
               <h1 className={styles.destinationName}>{destination.title || destination.name}</h1>
-              <div className={styles.rating}>
-                <span className={styles.ratingValue}>{typeof destination.rating === 'number' ? destination.rating.toFixed(1) : 'N/A'}</span>
-                <span className={styles.stars}>{renderStars(destination.rating || 0)}</span>
+              <div className={styles.likeRatingRow}>
+                <div className={styles.rating}>
+                  <span className={styles.ratingValue}>{typeof destination.rating === 'number' ? destination.rating.toFixed(1) : 'N/A'}</span>
+                  <span className={styles.stars}>{renderStars(destination.rating || 0)}</span>
+                </div>
               </div>
             </div>
             <p className={styles.destinationLocation}>{destination.location}</p>
             <p className={styles.description}>{destination.description}</p>
+            <div className={styles.destinationInfoContainer}>
             <p className={styles.postedBy}>Posted by: {destination.username}</p>
+              <div className={styles.likeContainer}>
+                <span style={{ fontSize:20, marginLeft: 4 }}>{likeInfo.likeCount}</span>
+            <span
+                  className={`${styles.heartIcon} ${likeInfo.liked ? styles.liked : ''}`}
+                  onClick={handleLikeToggle}
+                  title={isAuth ? (likeInfo.liked ? 'Unlike' : 'Like') : 'Login to like'}
+                  style={{ pointerEvents: 'auto', opacity: 1 }}
+                  role="button"
+                  aria-label="Like"
+                >
+                  <FaHeart />
+                </span>
+              </div>
+              </div>
           </div>
         </div>
         <div className={styles.reviewsSection}>
@@ -188,38 +242,49 @@ function DestinationDetails() {
           ) : (
             <div className={styles.noReviews}>No reviews yet.</div>
           )}
-          {isAuth ? (
-            <form className={styles.reviewForm} onSubmit={handleReviewSubmit}>
-              <div className={styles.reviewFormTitle}>Write a review:</div>
-              <div className={styles.reviewFormBody}>
-                <span>Rating:</span> {renderStars(review.rating, (star) => setReview(r => ({ ...r, rating: star })))}
-              <div className={styles.reviewFormBodyTextarea}>
-                <label htmlFor="review-body">Comment:</label>
-                <textarea
-                  id="review-body"
-                  name="body"
-                  value={review.body}
-                  onChange={handleReviewChange}
-                  maxLength={300}
-                  rows={3}
-                  className={styles.reviewTextarea}
-                />
-                </div>
-                </div>
-              {reviewError && <div className={styles.reviewError}>{reviewError}</div>}
-              {reviewSuccess && <div className={styles.reviewSuccess}>Review submitted successfully!</div>}
-              <button type="submit" className={styles.submitButton} disabled={reviewLoading}>
-                SUBMIT REVIEW
-              </button>
-            </form>
-          ) : (
-            <p className={styles.loginPrompt}>
-              <Link to="/login" className={styles.loginLink}>Login</Link> or{' '}
-              <Link to="/register" className={styles.registerLink}>Register</Link> to write a review.
-            </p>
-          )}
+          {(() => {
+            const role = localStorage.getItem('role');
+            if (role === 'admin') return null;
+            if (isAuth) {
+              return (
+                <form className={styles.reviewForm} onSubmit={handleReviewSubmit}>
+                  <div className={styles.reviewFormTitle}>Write a review:</div>
+                  <div className={styles.reviewFormBody}>
+                    <span>Rating:</span> {renderStars(review.rating, (star) => setReview(r => ({ ...r, rating: star })))}
+                  <div className={styles.reviewFormBodyTextarea}>
+                    <label htmlFor="review-body">Comment:</label>
+                    <textarea
+                      id="review-body"
+                      name="body"
+                      value={review.body}
+                      onChange={handleReviewChange}
+                      maxLength={300}
+                      rows={3}
+                      className={styles.reviewTextarea}
+                    />
+                    </div>
+                    </div>
+                  {reviewError && <div className={styles.reviewError}>{reviewError}</div>}
+                  {reviewSuccess && <div className={styles.reviewSuccess}>Review submitted successfully!</div>}
+                  <button type="submit" className={styles.submitButton} disabled={reviewLoading}>
+                    SUBMIT REVIEW
+                  </button>
+                </form>
+              );
+            } else {
+              return (
+                <p className={styles.loginPrompt}>
+                  <Link to="/login" className={styles.loginLink}>Login</Link> or{' '}
+                  <Link to="/register" className={styles.registerLink}>Register</Link> to write a review.
+                </p>
+              );
+            }
+          })()}
         </div>
       </div>
+      {showLikeLoginModal && (
+        <LikeLoginModal onClose={() => setShowLikeLoginModal(false)} />
+      )}
     </div>
   );
 }

@@ -24,7 +24,11 @@ function UpdateUserForm({ user, onClose, onSuccess }) {
     setError(null);
     setSuccess(false);
     try {
-      const payload = { ...form };
+      const payload = {};
+      if (form.username && form.username !== user.username) payload.username = form.username;
+      if (form.email && form.email !== user.email) payload.email = form.email;
+      if (form.password) payload.password = form.password;
+      if (form.role && form.role !== user.role && form.role !== user.roles) payload.role = form.role;
       const response = await fetchWithAuth(`/api/users/${user.id}`, {
         method: 'PUT',
         headers: {
@@ -61,16 +65,16 @@ function UpdateUserForm({ user, onClose, onSuccess }) {
         <hr className={styles.hr} />
         <form onSubmit={handleSubmit} className={styles.form}>
           <label>USERNAME:
-            <input name="username" value={form.username} onChange={handleChange} className={styles.input} required />
+            <input name="username" value={form.username} onChange={handleChange} className={styles.input} />
           </label>
           <label>EMAIL:
-            <input name="email" value={form.email} onChange={handleChange} className={styles.input} required />
+            <input name="email" value={form.email} onChange={handleChange} className={styles.input} />
           </label>
           <label>PASSWORD:
-            <input name="password" type="password" value={form.password} onChange={handleChange} className={styles.input} required />
+            <input name="password" type="password" value={form.password} onChange={handleChange} className={styles.input} />
           </label>
           <label>ROLE:
-            <select name="role" value={form.role} onChange={handleChange} className={styles.input} required>
+            <select name="role" value={form.role} onChange={handleChange} className={styles.input} >
               <option value="USER">USER</option>
               <option value="ADMIN">ADMIN</option>
             </select>

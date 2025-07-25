@@ -111,7 +111,7 @@
   margin: 0;
   text-align: left;
   font-weight: bold;
-  margin-top: auto;
+  margin-top: 0;
 }
 
 .reviewsSection {
@@ -265,6 +265,40 @@
   color: var(--neutral-color);
   margin-bottom: 10px;
   text-align: left;
+}
+
+.heartIcon {
+  font-size: 28px;
+  color: var(--neutral-color);
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+  vertical-align: middle;
+}
+.heartIcon.liked {
+  color: #e53935;
+  transform: scale(1.15);
+}
+.heartIcon:hover {
+  color: #e53935;
+  transform: scale(1.1);
+}
+
+.likeContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.likeRatingRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.destinationInfoContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 @media (max-width: 768px) {
