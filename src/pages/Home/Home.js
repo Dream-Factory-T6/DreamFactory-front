@@ -90,9 +90,7 @@ function Home() {
           />
         </div>
       </aside>
-
       <div className={styles.verticalDivider}></div>
-
       <main className={styles.mainContent}>
         {loading && <div>Loading destinations...</div>}
         {error && <div className={styles.error}>{error}</div>}
@@ -129,7 +127,6 @@ function Home() {
             </div>
           ))}
         </div>
-        {/* Pagination controls */}
         {!loading && !error && pageCount > 1 && (
           <div className={styles.paginationContainer}>
             {Array.from({ length: pageCount }, (_, idx) => (
