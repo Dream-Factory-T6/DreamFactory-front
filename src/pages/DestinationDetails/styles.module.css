@@ -1,0 +1,356 @@
+.mainContainer {
+  background-color: var(--background-color);
+}
+
+.container {
+  padding: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--background-color);
+  min-height: calc(100vh - 120px);
+}
+
+.notFound {
+  padding: 50px;
+  text-align: center;
+}
+
+.notFound h2 {
+  color: var(--primary-text-color);
+  margin-bottom: 20px;
+}
+
+.notFound a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.destinationCard {
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  margin-bottom: 40px;
+}
+
+.cardImage {
+  flex: 1;
+  height: 400px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardImage img {
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.cardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  justify-content: space-between;
+}
+
+.destinationNameContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.destinationName {
+  font-size: 36px;
+  color: var(--primary-text-color);
+  margin: 0;
+}
+
+.destinationLocation {
+  font-size: 20px;
+  color: var(--primary-text-color);
+  margin: 20px 0 20px 0;
+  font-style: italic;
+  align-self: flex-start;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.ratingValue {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--primary-text-color);
+}
+
+.stars {
+  font-size: 28px;
+  color: var(--star-gold-alt);
+  letter-spacing: 3px;
+}
+
+.description {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--primary-text-color);
+  margin: 30px 0 30px 0;
+  text-align: left;
+}
+
+.postedBy {
+  font-size: 14px;
+  color: var(--primary-color);
+  margin: 0;
+  text-align: left;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.reviewsSection {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.review {
+  border-radius: 5px;
+  padding: 5px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
+}
+
+.reviewsTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary-text-color);
+  margin: 0 0 20px 0;
+  text-align: left;
+}
+
+.reviewHeader {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.reviewUser {
+  font-weight: 700;
+  color: var(--secondary-color);
+  font-size: 16px;
+}
+
+.reviewStars {
+  font-size: 18px;
+  color: #ffbd59;
+  letter-spacing: 2px;
+}
+
+.reviewFormBody {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 10px;
+}
+
+.reviewText {
+  color: var(--primary-text-color);
+  line-height: 1.5;
+  margin: 0;
+  text-align: left;
+}
+
+.loginPrompt {
+  text-align: center;
+  color: var(--primary-text-color);
+  margin: 40px 0 0 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+.loginLink,
+.registerLink {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.loginLink:hover,
+.registerLink:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+.reviewForm {
+  margin-top: 30px;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stars {
+  font-size: 22px;
+  color: var(--star-gold);
+  letter-spacing: 2px;
+  margin-left: 8px;
+}
+
+.submitButton {
+  background: var(--success-color);
+  color: white;
+  border: none;
+  width: 200px;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: background 0.2s;
+}
+.submitButton:disabled {
+  background: #b2d6cd;
+  cursor: not-allowed;
+}
+
+.reviewError {
+  color: var(--error-color);
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.reviewSuccess {
+  color: #7bb3a6;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.reviewFormBodyTextarea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reviewTextarea {
+  width: 70%;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  padding: 8px;
+  font-size: 15px;
+  resize: vertical;
+}
+
+.reviewFormTitle {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.noReviews {
+  color: var(--neutral-color);
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.heartIcon {
+  font-size: 28px;
+  color: var(--neutral-color);
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+  vertical-align: middle;
+}
+.heartIcon.liked {
+  color: #e53935;
+  transform: scale(1.15);
+}
+.heartIcon:hover {
+  color: #e53935;
+  transform: scale(1.1);
+}
+
+.likeContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.likeRatingRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.destinationInfoContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .destinationCard {
+    flex-direction: column;
+  }
+
+  .cardImage {
+    height: 250px;
+  }
+
+  .cardContent {
+    padding: 25px;
+  }
+
+  .destinationName {
+    font-size: 28px;
+  }
+
+  .destinationLocation {
+    font-size: 18px;
+  }
+
+  .description {
+    font-size: 16px;
+  }
+
+  .reviewsSection {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+
+  .cardContent {
+    padding: 20px;
+  }
+
+  .destinationName {
+    font-size: 24px;
+  }
+
+  .rating {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

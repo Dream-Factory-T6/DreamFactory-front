@@ -1,0 +1,138 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(24, 22, 22, 0.7);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent {
+  background: #f5ede4;
+  border-radius: 12px;
+  padding: 40px;
+  min-width: 600px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  position: relative;
+}
+
+.closeButton {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 18px;
+  margin-top: 0;
+}
+
+.currentInfo {
+  color: var(--success-color);
+  font-weight: 600;
+  margin-bottom: 20px;
+  font-size: 18px;
+  text-align: left;
+}
+
+.infoRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.infoBlock {
+  flex: 1;
+  text-align: left;
+}
+
+.infoItem {
+  margin-bottom: 10px;
+}
+
+.currentImage {
+  width: 180px;
+  border-radius: 8px;
+}
+
+.hr {
+  border: none;
+  border-top: 2px solid #7bb3a6;
+  margin: 18px 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+  font-size: 1 rem;
+  font-weight: 700;
+}
+
+.form label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.input,
+.fileInput {
+  width: 80%;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  margin-left: 8px;
+}
+
+.fileInput {
+  margin-left: 8px;
+  background-color: var(--input-bg);
+}
+
+.preview {
+  width: 180px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.submitButton {
+  align-self: center;
+  background: #7bb3a6;
+  color: white;
+  border: none;
+  width: 200px;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 18px;
+  margin-top: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.preview {
+  align-self: flex-end;
+}
+
+.success {
+  color: #7bb3a6;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.error {
+  color: var(--error-color);
+  text-align: center;
+  margin-top: 10px;
+}

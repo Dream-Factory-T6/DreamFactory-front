@@ -1,0 +1,136 @@
+.loginContainer {
+  min-height: calc(100vh - 120px);
+  background-color: var(--background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.loginForm {
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.loginTitle {
+  text-align: center;
+  color: var(--primary-color);
+  font-size: 32px;
+  font-weight: 500;
+  margin: 0 0 30px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  color: var(--primary-text-color);
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.input {
+  padding: 12px 15px;
+  border: 1px solid var(--primary-color);
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: var(--input-bg);
+  color: var(--primary-text-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(112, 154, 149, 0.3);
+}
+
+.input::placeholder {
+  color: var(--input-placeholder);
+}
+
+.loginButton {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.loginButton:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+.loginButton:active {
+  transform: translateY(0);
+}
+
+.registerLink {
+  text-align: center;
+  margin-top: 25px;
+  color: var(--primary-text-color);
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 20px;
+}
+
+.link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .loginForm {
+    padding: 30px 20px;
+  }
+
+  .loginTitle {
+    font-size: 28px;
+  }
+
+  .input {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .loginButton {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
