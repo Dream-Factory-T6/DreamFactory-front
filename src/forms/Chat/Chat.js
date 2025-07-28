@@ -12,6 +12,7 @@ function Chat({ isOpen, onClose }) {
   const [stompClient, setStompClient] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [hasJoined, setHasJoined] = useState(false);
   const [showEmojis, setShowEmojis] = useState(false);
   const [currentSubscription, setCurrentSubscription] = useState(null);
@@ -34,14 +35,13 @@ function Chat({ isOpen, onClose }) {
   useEffect(() => {
     const newUsername = getUsernameFromToken();
     
-    if (newUsername !== username) {
-      if (stompClient) {
-        stompClient.deactivate();
-        setStompClient(null);
-      }
-      setIsConnected(false);
-      setHasJoined(false);
-    }
+            if (newUsername !== username) {
+          if (stompClient) {
+            stompClient.deactivate();
+            setStompClient(null);
+          }
+          setIsConnected(false);
+        }
     
     setUsername(newUsername);
   }, [username, stompClient]);
@@ -64,7 +64,6 @@ function Chat({ isOpen, onClose }) {
           setStompClient(null);
         }
         setIsConnected(false);
-        setHasJoined(false);
       }
     }
   }, [isOpen, rooms.length, username, stompClient, isConnected]);
@@ -101,16 +100,14 @@ function Chat({ isOpen, onClose }) {
         stompClient.deactivate();
         setStompClient(null);
         setIsConnected(false);
-        setHasJoined(false);
       }
     }
 
     if (stompClient) {
-      stompClient.deactivate();
-      setStompClient(null);
-      setIsConnected(false);
-      setHasJoined(false);
-    }
+              stompClient.deactivate();
+        setStompClient(null);
+        setIsConnected(false);
+      }
 
     const connectWebSocket = () => {
       const token = localStorage.getItem('token');
@@ -175,7 +172,7 @@ function Chat({ isOpen, onClose }) {
                   roomId: currentRoom
                 })
               });
-              setHasJoined(true);
+
             }
           }, 200);
         };
@@ -222,6 +219,7 @@ function Chat({ isOpen, onClose }) {
         clearTimeout(connectionAttemptRef.current);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, username, currentRoom]);
 
   useEffect(() => {
