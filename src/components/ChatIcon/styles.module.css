@@ -1,0 +1,81 @@
+.chatIconContainer {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 999;
+  animation: bounceIn 0.6s ease;
+}
+
+.chatIconButton {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.chatIconButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: var(--secondary-color);
+}
+
+.chatIconButton:active {
+  transform: translateY(-1px);
+}
+
+.chatIcon {
+  width: 30px;
+  height: 30px;
+  color: white;
+  transition: transform 0.2s ease;
+}
+
+.chatIconButton:hover .chatIcon {
+  transform: scale(1.1);
+}
+
+/* Анимация появления */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(50px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-5px);
+  }
+  70% {
+    transform: scale(0.9) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .chatIconContainer {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .chatIconButton {
+    width: 50px;
+    height: 50px;
+  }
+
+  .chatIcon {
+    width: 25px;
+    height: 25px;
+  }
+}
