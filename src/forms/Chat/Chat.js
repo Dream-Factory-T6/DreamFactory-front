@@ -14,6 +14,7 @@ function Chat({ isOpen, onClose }) {
   const [username, setUsername] = useState('');
   const [hasJoined, setHasJoined] = useState(false);
   const [showEmojis, setShowEmojis] = useState(false);
+  const [currentSubscription, setCurrentSubscription] = useState(null);
   const messagesEndRef = useRef(null);
   const connectionAttemptRef = useRef(null);
 
@@ -89,7 +90,6 @@ function Chat({ isOpen, onClose }) {
 
     const token = localStorage.getItem('token');
     if (!token) {
-
       setIsConnected(false);
       return;
     }
@@ -98,7 +98,6 @@ function Chat({ isOpen, onClose }) {
       if (stompClient.connected) {
         return;
       } else {
-
         stompClient.deactivate();
         setStompClient(null);
         setIsConnected(false);
@@ -142,32 +141,44 @@ function Chat({ isOpen, onClose }) {
         heartbeatOutgoing: 4000,
       });
 
-      client.onConnect = () => {
+              client.onConnect = () => {
+          setIsConnected(true);
+          setStompClient(client);
 
-        setIsConnected(true);
-        setStompClient(client);
-
-        client.subscribe(`/topic/room/${currentRoom}`, (message) => {
-          const receivedMessage = JSON.parse(message.body);
-          setMessages(prev => [...prev, receivedMessage]);
-        });
-
-        setTimeout(() => {
-          if (client.connected) {
-            const currentUsername = getUsernameFromToken();
-            client.publish({
-              destination: '/app/chat.addUser',
-              body: JSON.stringify({
-                sender: currentUsername,
-                type: 'JOIN',
-                roomId: currentRoom
-              })
+          const subscription = client.subscribe(`/topic/room/${currentRoom}`, (message) => {
+            const receivedMessage = JSON.parse(message.body);
+            setMessages(prev => {
+              const messageExists = prev.some(msg => 
+                msg.sender === receivedMessage.sender && 
+                msg.timestamp === receivedMessage.timestamp &&
+                msg.content === receivedMessage.content
+              );
+              
+              if (messageExists) {
+                return prev;
+              }
+              
+              const newMessages = [...prev, receivedMessage];
+              return newMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
             });
-            setHasJoined(true);
+          });
+          setCurrentSubscription(subscription);
 
-          }
-        }, 200);
-      };
+          setTimeout(() => {
+            if (client.connected) {
+              const currentUsername = getUsernameFromToken();
+              client.publish({
+                destination: '/app/chat.addUser',
+                body: JSON.stringify({
+                  sender: currentUsername,
+                  type: 'JOIN',
+                  roomId: currentRoom
+                })
+              });
+              setHasJoined(true);
+            }
+          }, 200);
+        };
 
       client.onStompError = (frame) => {
 
@@ -226,7 +237,8 @@ function Chat({ isOpen, onClose }) {
         });
         if (response.ok) {
           const data = await response.json();
-          setMessages(data);
+          const sortedMessages = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+          setMessages(sortedMessages);
         } else {
           setMessages([]);
         }
@@ -279,12 +291,17 @@ function Chat({ isOpen, onClose }) {
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (!newMessage.trim() || !stompClient || !isConnected) {
+    if (!newMessage.trim() || !stompClient || !isConnected || !stompClient.connected) {
+      return;
+    }
+
+    const currentUsername = getUsernameFromToken();
+    if (!currentUsername) {
       return;
     }
 
     const chatMessage = {
-      sender: username,
+      sender: currentUsername,
       content: newMessage,
       type: 'CHAT',
       roomId: currentRoom,
@@ -298,33 +315,47 @@ function Chat({ isOpen, onClose }) {
       });
       setNewMessage('');
     } catch (error) {
-
+      console.error('Error sending message:', error);
     }
   };
 
   const handleRoomChange = (roomId) => {
-    if (stompClient && isConnected) {
+    if (stompClient && isConnected && stompClient.connected) {
       try {
-        const currentSubscription = stompClient.subscriptions[`/topic/room/${currentRoom}`];
-        if (currentSubscription) {
+        if (currentSubscription && typeof currentSubscription.unsubscribe === 'function') {
           currentSubscription.unsubscribe();
         }
         
-        stompClient.subscribe(`/topic/room/${roomId}`, (message) => {
+        const subscription = stompClient.subscribe(`/topic/room/${roomId}`, (message) => {
           const receivedMessage = JSON.parse(message.body);
-          setMessages(prev => [...prev, receivedMessage]);
+          setMessages(prev => {
+            const messageExists = prev.some(msg => 
+              msg.sender === receivedMessage.sender && 
+              msg.timestamp === receivedMessage.timestamp &&
+              msg.content === receivedMessage.content
+            );
+            
+            if (messageExists) {
+              return prev;
+            }
+            
+            const newMessages = [...prev, receivedMessage];
+            return newMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+          });
         });
+        setCurrentSubscription(subscription);
 
+        const currentUsername = getUsernameFromToken();
         stompClient.publish({
           destination: '/app/chat.addUser',
           body: JSON.stringify({
-            sender: username,
+            sender: currentUsername,
             type: 'JOIN',
             roomId: roomId
           })
         });
       } catch (error) {
-
+        console.error('Error changing room:', error);
       }
     }
     
@@ -344,6 +375,10 @@ function Chat({ isOpen, onClose }) {
 
   useEffect(() => {
     if (!isOpen) {
+      if (currentSubscription && typeof currentSubscription.unsubscribe === 'function') {
+        currentSubscription.unsubscribe();
+        setCurrentSubscription(null);
+      }
       if (stompClient) {
         stompClient.deactivate();
         setStompClient(null);
@@ -354,7 +389,7 @@ function Chat({ isOpen, onClose }) {
         clearTimeout(connectionAttemptRef.current);
       }
     }
-  }, [isOpen, stompClient]);
+  }, [isOpen, stompClient, currentSubscription]);
 
   if (!isOpen) return null;
 
