@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './App.css';
 import Header from './components/Header/Header.js';
@@ -11,11 +11,23 @@ import UserPage from './pages/UserPage/UserPage.js';
 import AddDestination from './pages/AddDestination/AddDestination.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
+import Chat from './forms/Chat/Chat.js';
+import ChatIcon from './components/ChatIcon/ChatIcon.js';
 
 function App() {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const handleOpenChat = () => {
+    setIsChatOpen(true);
+  };
+
+  const handleCloseChat = () => {
+    setIsChatOpen(false);
+  };
+
   return (
     <Router>
-          <div className="App">
+      <div className="App">
         <Header />
         <main>
           <Routes>
@@ -29,6 +41,8 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        <ChatIcon onOpenChat={handleOpenChat} />
+        <Chat isOpen={isChatOpen} onClose={handleCloseChat} />
       </div>
     </Router>
   );
