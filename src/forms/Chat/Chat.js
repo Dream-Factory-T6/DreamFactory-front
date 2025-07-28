@@ -2,19 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from './styles.module.css';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-
-const EMOJIS = [
-  '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇',
-  '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚',
-  '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩',
-  '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣',
-  '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬',
-  '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗',
-  '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😯', '😦', '😧',
-  '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢',
-  '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠', '💩', '👻', '💀',
-  '☠️', '👽', '👾', '🤖', '😺', '😸', '😹', '😻', '😼', '😽'
-];
+import { EMOJIS } from './emojis';
 
 function Chat({ isOpen, onClose }) {
   const [messages, setMessages] = useState([]);
@@ -70,7 +58,6 @@ function Chat({ isOpen, onClose }) {
       
       const currentUsername = getUsernameFromToken();
       if (currentUsername && (!stompClient || !isConnected)) {
-        console.log('Forcing reconnection on chat open for user:', currentUsername);
         if (stompClient) {
           stompClient.deactivate();
           setStompClient(null);
@@ -88,7 +75,6 @@ function Chat({ isOpen, onClose }) {
 
     const currentUsername = getUsernameFromToken();
     if (!currentUsername) {
-      console.log('No username available, cannot connect to chat');
       setIsConnected(false);
       return;
     }
@@ -103,17 +89,16 @@ function Chat({ isOpen, onClose }) {
 
     const token = localStorage.getItem('token');
     if (!token) {
-      console.log('No token found, cannot connect to chat');
+
       setIsConnected(false);
       return;
     }
 
     if (stompClient && isConnected) {
       if (stompClient.connected) {
-        console.log('Already connected to chat');
         return;
       } else {
-        console.log('Connection exists but not active, reconnecting...');
+
         stompClient.deactivate();
         setStompClient(null);
         setIsConnected(false);
@@ -133,18 +118,18 @@ function Chat({ isOpen, onClose }) {
       const currentUsername = getUsernameFromToken();
       
       if (!token) {
-        console.log('No token available for WebSocket connection');
+
         setIsConnected(false);
         return;
       }
       
       if (!currentUsername) {
-        console.log('No username available for WebSocket connection');
+
         setIsConnected(false);
         return;
       }
       
-      console.log('Attempting to connect to WebSocket for user:', currentUsername, 'with token:', token.substring(0, 20) + '...');
+
       
       const socket = new SockJS('http://localhost:8080/ws');
       const client = new Client({
@@ -155,13 +140,10 @@ function Chat({ isOpen, onClose }) {
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
-        debug: (str) => {
-          console.log('STOMP Debug:', str);
-        }
       });
 
       client.onConnect = () => {
-        console.log('WebSocket connected successfully');
+
         setIsConnected(true);
         setStompClient(client);
 
@@ -182,39 +164,39 @@ function Chat({ isOpen, onClose }) {
               })
             });
             setHasJoined(true);
-            console.log('Joined room:', currentRoom, 'as user:', currentUsername);
+
           }
         }, 200);
       };
 
       client.onStompError = (frame) => {
-        console.error('STOMP error:', frame);
+
         setIsConnected(false);
         setHasJoined(false);
         
         setTimeout(() => {
           if (isOpen && username) {
-            console.log('Retrying connection after STOMP error...');
+
             connectWebSocket();
           }
         }, 3000);
       };
 
       client.onWebSocketError = (error) => {
-        console.error('WebSocket error:', error);
+
         setIsConnected(false);
         setHasJoined(false);
         
         setTimeout(() => {
           if (isOpen && username) {
-            console.log('Retrying connection after WebSocket error...');
+
             connectWebSocket();
           }
         }, 3000);
       };
 
       client.onWebSocketClose = () => {
-        console.log('WebSocket connection closed');
+
         setIsConnected(false);
         setHasJoined(false);
       };
@@ -316,7 +298,7 @@ function Chat({ isOpen, onClose }) {
       });
       setNewMessage('');
     } catch (error) {
-      console.error('Error sending message:', error);
+
     }
   };
 
@@ -342,7 +324,7 @@ function Chat({ isOpen, onClose }) {
           })
         });
       } catch (error) {
-        console.error('Error changing room:', error);
+
       }
     }
     
