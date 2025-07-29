@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
 import { fetchWithAuth } from '../../api';
+import { validateUserForm } from '../../utils/validation';
 
 function UpdateUserForm({ user, onClose, onSuccess }) {
   const [form, setForm] = useState({
@@ -9,6 +10,7 @@ function UpdateUserForm({ user, onClose, onSuccess }) {
     password: '',
     role: user.role === 'ADMIN' || user.role === 'ROLE_ADMIN' ? 'ADMIN' : 'USER',
   });
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -16,6 +18,10 @@ function UpdateUserForm({ user, onClose, onSuccess }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(f => ({ ...f, [name]: value }));
+    
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: null }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -23,6 +29,15 @@ function UpdateUserForm({ user, onClose, onSuccess }) {
     setLoading(true);
     setError(null);
     setSuccess(false);
+    setErrors({});
+    
+    const validation = validateUserForm(form);
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      setLoading(false);
+      return;
+    }
+    
     try {
       const payload = {};
       if (form.username && form.username !== user.username) payload.username = form.username;
@@ -65,13 +80,32 @@ function UpdateUserForm({ user, onClose, onSuccess }) {
         <hr className={styles.hr} />
         <form onSubmit={handleSubmit} className={styles.form}>
           <label>USERNAME:
-            <input name="username" value={form.username} onChange={handleChange} className={styles.input} />
+            <input 
+              name="username" 
+              value={form.username} 
+              onChange={handleChange} 
+              className={`${styles.input} ${errors.username ? styles.inputError : ''}`} 
+            />
+            {errors.username && <div className={styles.fieldError}>{errors.username}</div>}
           </label>
           <label>EMAIL:
-            <input name="email" value={form.email} onChange={handleChange} className={styles.input} />
+            <input 
+              name="email" 
+              value={form.email} 
+              onChange={handleChange} 
+              className={`${styles.input} ${errors.email ? styles.inputError : ''}`} 
+            />
+            {errors.email && <div className={styles.fieldError}>{errors.email}</div>}
           </label>
           <label>PASSWORD:
-            <input name="password" type="password" value={form.password} onChange={handleChange} className={styles.input} />
+            <input 
+              name="password" 
+              type="password" 
+              value={form.password} 
+              onChange={handleChange} 
+              className={`${styles.input} ${errors.password ? styles.inputError : ''}`} 
+            />
+            {errors.password && <div className={styles.fieldError}>{errors.password}</div>}
           </label>
           <label>ROLE:
             <select name="role" value={form.role} onChange={handleChange} className={styles.input} >

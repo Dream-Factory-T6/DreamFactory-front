@@ -66,7 +66,17 @@ function UserPage() {
       const response = await fetchWithAuth(`/api/destinations/${deleteModal.id}`, {
         method: 'DELETE',
       });
-      if (!response.ok) throw new Error('Failed to delete destination');
+      if (!response.ok) {
+        if (response.status === 400) {
+          throw new Error('Invalid request. Please try again.');
+        } else if (response.status === 403) {
+          throw new Error('You do not have permission to delete this destination.');
+        } else if (response.status === 404) {
+          throw new Error('Destination not found.');
+        } else {
+          throw new Error(`Failed to delete destination (${response.status})`);
+        }
+      }
       setDeleteSuccess(true);
       setTimeout(() => {
         setDeleteModal(null);

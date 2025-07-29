@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
 import { fetchWithAuth } from '../../api';
+import { validateDestinationForm } from '../../utils/validation';
 
 function UpdateDestinationForm({ destination, onClose, onSuccess }) {
   const [form, setForm] = useState({
@@ -9,6 +10,7 @@ function UpdateDestinationForm({ destination, onClose, onSuccess }) {
     description: destination.description || '',
     image: null,
   });
+  const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -19,12 +21,25 @@ function UpdateDestinationForm({ destination, onClose, onSuccess }) {
       ...f,
       [name]: files ? files[0] : value,
     }));
+    
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: null }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     setError(null);
+    setErrors({});
+    
+    const validation = validateDestinationForm(form);
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      setSubmitting(false);
+      return;
+    }
+    
     try {
       const formData = new FormData();
       formData.append('title', form.title);
@@ -65,19 +80,44 @@ function UpdateDestinationForm({ destination, onClose, onSuccess }) {
         <form onSubmit={handleSubmit} className={styles.form}>
           <label>
             TITLE:
-            <input name="title" value={form.title} onChange={handleChange} className={styles.input} />
+            <input 
+              name="title" 
+              value={form.title} 
+              onChange={handleChange} 
+              className={`${styles.input} ${errors.title ? styles.inputError : ''}`} 
+            />
+            {errors.title && <div className={styles.fieldError}>{errors.title}</div>}
           </label>
           <label>
             LOCATION:
-            <input name="location" value={form.location} onChange={handleChange} className={styles.input} />
+            <input 
+              name="location" 
+              value={form.location} 
+              onChange={handleChange} 
+              className={`${styles.input} ${errors.location ? styles.inputError : ''}`} 
+            />
+            {errors.location && <div className={styles.fieldError}>{errors.location}</div>}
           </label>
           <label>
             DESCRIPTION:
-            <input name="description" value={form.description} onChange={handleChange} className={styles.input} />
+            <input 
+              name="description" 
+              value={form.description} 
+              onChange={handleChange} 
+              className={`${styles.input} ${errors.description ? styles.inputError : ''}`} 
+            />
+            {errors.description && <div className={styles.fieldError}>{errors.description}</div>}
           </label>
           <label>
             IMAGE:
-            <input name="image" type="file" accept="image/*" onChange={handleChange} className={styles.fileInput} />
+            <input 
+              name="image" 
+              type="file" 
+              accept="image/*" 
+              onChange={handleChange} 
+              className={`${styles.fileInput} ${errors.image ? styles.inputError : ''}`} 
+            />
+            {errors.image && <div className={styles.fieldError}>{errors.image}</div>}
           </label>
           {form.image && <img src={URL.createObjectURL(form.image)} alt="Preview" className={styles.preview} />}
           <button type="submit" disabled={submitting} className={styles.submitButton}>
