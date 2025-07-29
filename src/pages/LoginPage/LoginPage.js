@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './styles.module.css';
+import { validateLoginForm } from '../../utils/validation';
 
 function LoginPage() {
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -16,11 +18,23 @@ function LoginPage() {
       ...prevState,
       [name]: value
     }));
+          
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: null }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setErrors({});
+
+    const validation = validateLoginForm(formData);
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      return;
+    }
+    
     try {
       const response = await fetch('http://localhost:8080/login', {
         method: 'POST',
@@ -29,7 +43,7 @@ function LoginPage() {
         credentials: 'include',
       });
       if (!response.ok) {
-        throw new Error('Login failed. Please check your credentials.');
+        throw new Error('Login failed. Please check your username and password.');
       }
       const data = await response.json();
       localStorage.setItem('token', data.token);
@@ -112,10 +126,11 @@ function LoginPage() {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className={styles.input}
+              className={`${styles.input} ${errors.username ? styles.inputError : ''}`}
               placeholder="Enter your username"
               required
             />
+            {errors.username && <div className={styles.fieldError}>{errors.username}</div>}
           </div>
 
           <div className={styles.formGroup}>
@@ -126,10 +141,11 @@ function LoginPage() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className={styles.input}
+              className={`${styles.input} ${errors.password ? styles.inputError : ''}`}
               placeholder="Enter your password"
               required
             />
+            {errors.password && <div className={styles.fieldError}>{errors.password}</div>}
           </div>
 
           {error && <div style={{ color: 'red', textAlign: 'center' }}>{error}</div>}

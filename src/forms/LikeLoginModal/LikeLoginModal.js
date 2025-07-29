@@ -9,7 +9,7 @@ function LikeLoginModal({ onClose }) {
       <div className={styles.modalContent}>
         <button onClick={onClose} className={styles.modalClose}>&times;</button>
         <h2 className={styles.modalTitle}>Want to like this destination?</h2>
-        <p className={styles.modalMessage}>Please login or register to like this destination.</p>
+        <p className={styles.modalMessage}>Please login or register.</p>
         <div className={styles.buttonRow}>
         <button onClick={() => { onClose(); navigate('/login'); }} className={styles.modalButton}>Login</button>
           <button onClick={() => { onClose(); navigate('/register'); }} className={styles.modalButton}>Register</button>

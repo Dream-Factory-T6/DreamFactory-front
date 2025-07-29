@@ -4,6 +4,7 @@ import { fetchDestinationById, fetchWithAuth } from '../../api';
 import styles from './styles.module.css';
 import { FaHeart } from 'react-icons/fa';
 import LikeLoginModal from '../../forms/LikeLoginModal/LikeLoginModal';
+import { validateReviewForm } from '../../utils/validation';
 
 function parseJwt(token) {
   if (!token) return null;
@@ -31,6 +32,7 @@ function DestinationDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [review, setReview] = useState({ rating: 0, body: '' });
+  const [reviewErrors, setReviewErrors] = useState({});
   const [reviewError, setReviewError] = useState(null);
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewSuccess, setReviewSuccess] = useState(false);
@@ -128,24 +130,24 @@ function DestinationDetails() {
   const handleReviewChange = (e) => {
     const { name, value } = e.target;
     setReview(r => ({ ...r, [name]: value }));
+    
+    if (reviewErrors[name]) {
+      setReviewErrors(prev => ({ ...prev, [name]: null }));
+    }
   };
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     setReviewError(null);
     setReviewSuccess(false);
-    if (!review.rating || review.rating < 0 || review.rating > 5) {
-      setReviewError('Rating is required (0-5)');
+    setReviewErrors({});
+    
+    const validation = validateReviewForm(review);
+    if (!validation.isValid) {
+      setReviewErrors(validation.errors);
       return;
     }
-    if (!review.body || review.body.trim().length === 0) {
-      setReviewError('Comment is required');
-      return;
-    }
-    if (review.body.length > 300) {
-      setReviewError('Comment must be at most 300 characters');
-      return;
-    }
+    
     setReviewLoading(true);
     try {
       const response = await fetchWithAuth('/api/reviews', {
@@ -251,6 +253,7 @@ function DestinationDetails() {
                   <div className={styles.reviewFormTitle}>Write a review:</div>
                   <div className={styles.reviewFormBody}>
                     <span>Rating:</span> {renderStars(review.rating, (star) => setReview(r => ({ ...r, rating: star })))}
+                    {reviewErrors.rating && <div className={styles.fieldError}>{reviewErrors.rating}</div>}
                   <div className={styles.reviewFormBodyTextarea}>
                     <label htmlFor="review-body">Comment:</label>
                     <textarea
@@ -260,8 +263,9 @@ function DestinationDetails() {
                       onChange={handleReviewChange}
                       maxLength={300}
                       rows={3}
-                      className={styles.reviewTextarea}
+                      className={`${styles.reviewTextarea} ${reviewErrors.body ? styles.inputError : ''}`}
                     />
+                    {reviewErrors.body && <div className={styles.fieldError}>{reviewErrors.body}</div>}
                     </div>
                     </div>
                   {reviewError && <div className={styles.reviewError}>{reviewError}</div>}
