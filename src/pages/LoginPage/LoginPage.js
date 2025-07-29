@@ -43,7 +43,7 @@ function LoginPage() {
         credentials: 'include',
       });
       if (!response.ok) {
-        throw new Error('Login failed. Please check your credentials.');
+        throw new Error('Login failed. Please check your username and password.');
       }
       const data = await response.json();
       localStorage.setItem('token', data.token);
