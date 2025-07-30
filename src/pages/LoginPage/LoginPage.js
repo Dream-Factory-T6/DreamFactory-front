@@ -10,6 +10,7 @@ function LoginPage() {
   });
   const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -26,12 +27,16 @@ function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    
     setError(null);
     setErrors({});
+    setIsSubmitting(true);
 
     const validation = validateLoginForm(formData);
     if (!validation.isValid) {
       setErrors(validation.errors);
+      setIsSubmitting(false);
       return;
     }
     
@@ -110,6 +115,14 @@ function LoginPage() {
       }
     } catch (err) {
       setError(err.message);
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit(e);
     }
   };
 
@@ -117,7 +130,7 @@ function LoginPage() {
     <div className={styles.loginContainer}>
       <h1 className={styles.loginTitle}>LOGIN</h1>
       <div className={styles.loginForm}>
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit} className={styles.form} onKeyPress={handleKeyPress}>
           <div className={styles.formGroup}>
             <label htmlFor="username" className={styles.label}>USERNAME</label>
             <input
@@ -149,8 +162,12 @@ function LoginPage() {
           </div>
 
           {error && <div style={{ color: 'red', textAlign: 'center' }}>{error}</div>}
-          <button type="submit" className={styles.loginButton}>
-            LOGIN
+          <button 
+            type="submit" 
+            className={`${styles.loginButton} ${isSubmitting ? styles.submitting : ''}`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'LOGGING IN...' : 'LOGIN'}
           </button>
         </form>
 
