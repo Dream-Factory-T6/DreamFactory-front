@@ -63,6 +63,12 @@ function Home() {
     navigate(`/destination/${destinationId}`);
   };
 
+  const handleSearchKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div className={styles.homeContainer}>
       <aside className={styles.searchSidebar}>
@@ -73,6 +79,7 @@ function Home() {
             id="locationSearch"
             value={locationSearch}
             onChange={(e) => setLocationSearch(e.target.value)}
+            onKeyPress={handleSearchKeyPress}
             placeholder="Enter location..."
             className={styles.searchInput}
           />
@@ -85,6 +92,7 @@ function Home() {
             id="nameSearch"
             value={nameSearch}
             onChange={(e) => setNameSearch(e.target.value)}
+            onKeyPress={handleSearchKeyPress}
             placeholder="Enter destination name..."
             className={styles.searchInput}
           />

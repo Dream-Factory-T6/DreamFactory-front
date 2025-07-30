@@ -252,6 +252,25 @@
   padding: 8px;
   font-size: 15px;
   resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reviewTextarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(112, 154, 149, 0.3);
+}
+
+.inputError {
+  border-color: var(--error-color);
+  box-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
+}
+
+.fieldError {
+  color: var(--error-color);
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: left;
 }
 
 .reviewFormTitle {

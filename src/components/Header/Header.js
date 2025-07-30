@@ -44,6 +44,9 @@ function Header() {
     localStorage.removeItem('role');
     setShowLogoutModal(false);
     setIsLoggedIn(false);
+
+    window.dispatchEvent(new Event('logout'));
+    
     navigate('/');
   };
 

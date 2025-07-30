@@ -39,7 +39,17 @@ function AdminDashboard() {
       const response = await fetchWithAuth(`/api/users/${deleteUser.id}`, {
         method: 'DELETE',
       });
-      if (!response.ok) throw new Error('Failed to delete user');
+      if (!response.ok) {
+        if (response.status === 400) {
+          throw new Error('Invalid request. Please try again.');
+        } else if (response.status === 403) {
+          throw new Error('You do not have permission to delete this user.');
+        } else if (response.status === 404) {
+          throw new Error('User not found.');
+        } else {
+          throw new Error(`Failed to delete user (${response.status})`);
+        }
+      }
       setDeleteSuccess(true);
       setTimeout(() => {
         setDeleteUser(null);
