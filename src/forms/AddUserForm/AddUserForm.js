@@ -21,6 +21,8 @@ function AddUserForm({ onClose, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+    
     setLoading(true);
     setError(null);
     setSuccess(false);
@@ -50,8 +52,14 @@ function AddUserForm({ onClose, onSuccess }) {
       }, 1200);
     } catch (err) {
       setError(err.message);
-    } finally {
       setLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit(e);
     }
   };
 
@@ -60,7 +68,7 @@ function AddUserForm({ onClose, onSuccess }) {
       <div className={styles.modalContent}>
         <button onClick={onClose} className={styles.closeButton}>&times;</button>
         <h2 className={styles.title}>ADD USER</h2>
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit} className={styles.form} onKeyPress={handleKeyPress}>
           <label>USERNAME:
             <input 
               name="username" 
@@ -98,7 +106,13 @@ function AddUserForm({ onClose, onSuccess }) {
               <option value="ADMIN">ADMIN</option>
             </select>
           </label>
-          <button type="submit" className={styles.submitButton} disabled={loading}>ADD USER</button>
+          <button 
+            type="submit" 
+            className={`${styles.submitButton} ${loading ? styles.submitting : ''}`} 
+            disabled={loading}
+          >
+            {loading ? 'ADDING USER...' : 'ADD USER'}
+          </button>
           {success && <div className={styles.success}>User was added successfully !!!</div>}
           {error && <div className={styles.error}>{error}</div>}
         </form>

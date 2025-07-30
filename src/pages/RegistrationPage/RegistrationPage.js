@@ -11,6 +11,7 @@ function RegistrationPage() {
   });
   const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -27,12 +28,16 @@ function RegistrationPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    
     setError(null);
     setErrors({});
+    setIsSubmitting(true);
     
     const validation = validateRegistrationForm(formData);
     if (!validation.isValid) {
       setErrors(validation.errors);
+      setIsSubmitting(false);
       return;
     }
     
@@ -64,6 +69,14 @@ function RegistrationPage() {
       navigate('/user-account');
     } catch (err) {
       setError(err.message);
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit(e);
     }
   };
 
@@ -71,55 +84,51 @@ function RegistrationPage() {
     <div className={styles.registrationContainer}>
       <h1 className={styles.registrationTitle}>REGISTRATION</h1>
       <div className={styles.registrationForm}>
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit} className={styles.form} onKeyPress={handleKeyPress}>
           <div className={styles.formGroup}>
             <label htmlFor="username" className={styles.label}>USERNAME</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.username ? styles.inputError : ''}`}
+            <input 
+              name="username" 
+              value={formData.username} 
+              onChange={handleChange} 
+              className={`${styles.input} ${errors.username ? styles.inputError : ''}`} 
               placeholder="Enter your username"
-              required
+              required 
             />
             {errors.username && <div className={styles.fieldError}>{errors.username}</div>}
           </div>
-
           <div className={styles.formGroup}>
             <label htmlFor="email" className={styles.label}>EMAIL</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
+            <input 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              className={`${styles.input} ${errors.email ? styles.inputError : ''}`} 
               placeholder="Enter your email"
-              required
+              required 
             />
             {errors.email && <div className={styles.fieldError}>{errors.email}</div>}
           </div>
-
           <div className={styles.formGroup}>
             <label htmlFor="password" className={styles.label}>PASSWORD</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.password ? styles.inputError : ''}`}
+            <input 
+              name="password" 
+              type="password" 
+              value={formData.password} 
+              onChange={handleChange} 
+              className={`${styles.input} ${errors.password ? styles.inputError : ''}`} 
               placeholder="Enter your password"
-              required
+              required 
             />
             {errors.password && <div className={styles.fieldError}>{errors.password}</div>}
           </div>
-
           {error && <div style={{ color: 'red', textAlign: 'center' }}>{error}</div>}
-          <button type="submit" className={styles.registerButton}>
-            REGISTER
+          <button 
+            type="submit" 
+            className={`${styles.registerButton} ${isSubmitting ? styles.submitting : ''}`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'REGISTERING...' : 'REGISTER'}
           </button>
         </form>
       </div>
